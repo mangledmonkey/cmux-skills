@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "cmux",
-      "source": ".",
+      "source": "./",
       "description": "Skills for cmux topology control, browser automation, markdown viewer, and debug windows",
       "version": "1.0.0"
     }
