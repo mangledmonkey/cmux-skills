@@ -29,10 +29,18 @@ jobs:
           cd -
 
           # Copy the 4 skill directories (exclude release)
-          for skill in cmux cmux-browser cmux-debug-windows cmux-markdown; do
-            if [ -d "/tmp/upstream/skills/${skill}" ]; then
-              rm -rf "skills/${skill}"
-              cp -R "/tmp/upstream/skills/${skill}" "skills/${skill}"
+          # Upstream uses cmux-* prefixed names; we strip the prefix for plugin namespacing
+          declare -A SKILL_MAP=(
+            [cmux]=cmux
+            [cmux-browser]=browser
+            [cmux-debug-windows]=debug-windows
+            [cmux-markdown]=markdown
+          )
+          for upstream in "${!SKILL_MAP[@]}"; do
+            local_name="${SKILL_MAP[$upstream]}"
+            if [ -d "/tmp/upstream/skills/${upstream}" ]; then
+              rm -rf "skills/${local_name}"
+              cp -R "/tmp/upstream/skills/${upstream}" "skills/${local_name}"
             fi
           done
 
@@ -46,9 +54,9 @@ jobs:
       - name: Review synced files with Claude
         run: |
           claude -p "Review the skills/ directory of this Claude Code plugin for:
-          1. Any script or template path references that should use \${CLAUDE_PLUGIN_ROOT} instead of bare relative paths (e.g. skills/cmux-debug-windows/scripts/... should be \${CLAUDE_PLUGIN_ROOT}/skills/...)
-          2. Frontmatter conformity: each SKILL.md must have name and description fields
-          3. Broken cross-references between skills (relative links like ../cmux-browser/SKILL.md)
+          1. Any script or template path references that should use \${CLAUDE_PLUGIN_ROOT} instead of bare relative paths (e.g. skills/debug-windows/scripts/... should be \${CLAUDE_PLUGIN_ROOT}/skills/...)
+          2. Frontmatter name field: must match the local directory name (e.g. browser, not cmux-browser). Each SKILL.md must have name and description fields.
+          3. Broken cross-references between skills (relative links like ../browser/SKILL.md)
           4. New files or structural changes that need adaptation
 
           Apply fixes directly. Output a summary of changes made." \
