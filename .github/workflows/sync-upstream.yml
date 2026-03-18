@@ -1,0 +1,103 @@
+name: Sync upstream skills
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 9 * * 1" # Weekly on Monday at 9am UTC
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out this repo
+        uses: actions/checkout@v4
+
+      - name: Fetch upstream skills directory
+        run: |
+          UPSTREAM_REPO="manaflow-ai/cmux"
+          UPSTREAM_BRANCH=$(gh api "repos/${UPSTREAM_REPO}" --jq '.default_branch')
+
+          # Clone upstream sparse checkout (skills/ only)
+          git clone --depth 1 --filter=blob:none --sparse \
+            "https://github.com/${UPSTREAM_REPO}.git" /tmp/upstream
+          cd /tmp/upstream
+          git sparse-checkout set skills
+          cd -
+
+          # Copy the 4 skill directories (exclude release)
+          for skill in cmux cmux-browser cmux-debug-windows cmux-markdown; do
+            if [ -d "/tmp/upstream/skills/${skill}" ]; then
+              rm -rf "skills/${skill}"
+              cp -R "/tmp/upstream/skills/${skill}" "skills/${skill}"
+            fi
+          done
+
+          rm -rf /tmp/upstream
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Install Claude CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Review synced files with Claude
+        run: |
+          claude -p "Review the skills/ directory of this Claude Code plugin for:
+          1. Any script or template path references that should use \${CLAUDE_PLUGIN_ROOT} instead of bare relative paths (e.g. skills/cmux-debug-windows/scripts/... should be \${CLAUDE_PLUGIN_ROOT}/skills/...)
+          2. Frontmatter conformity: each SKILL.md must have name and description fields
+          3. Broken cross-references between skills (relative links like ../cmux-browser/SKILL.md)
+          4. New files or structural changes that need adaptation
+
+          Apply fixes directly. Output a summary of changes made." \
+          --allowedTools 'Edit,Read,Glob,Grep,Bash(find:*),Bash(chmod:*)' \
+          > /tmp/claude-review.txt 2>&1 || true
+
+          cat /tmp/claude-review.txt
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Make scripts executable
+        run: |
+          find skills -name '*.sh' -exec chmod +x {} +
+
+      - name: Create PR if changes exist
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No changes detected."
+            exit 0
+          fi
+
+          BRANCH="sync-upstream-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "sync: update skills from upstream manaflow-ai/cmux"
+
+          git push origin "$BRANCH"
+
+          REVIEW_NOTES=""
+          if [ -f /tmp/claude-review.txt ]; then
+            REVIEW_NOTES=$(cat /tmp/claude-review.txt)
+          fi
+
+          gh pr create \
+            --title "sync: update skills from upstream" \
+            --body "$(cat <<EOF
+          ## Summary
+
+          Automated sync of skills from [manaflow-ai/cmux](https://github.com/manaflow-ai/cmux).
+
+          ## Claude Review Notes
+
+          \`\`\`
+          ${REVIEW_NOTES}
+          \`\`\`
+          EOF
+          )"
+        env:
+          GH_TOKEN: ${{ github.token }}
