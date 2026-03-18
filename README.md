@@ -5,7 +5,11 @@ Claude Code plugin that provides [cmux](https://github.com/manaflow-ai/cmux) ski
 ## Install
 
 ```bash
-claude plugin add mangledmonkey/cmux-skills
+# Add the marketplace source
+/plugin marketplace add mangledmonkey/cmux-skills
+
+# Install the plugin
+/plugin install cmux
 ```
 
 ## Skills

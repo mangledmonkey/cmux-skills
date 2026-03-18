@@ -4,12 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Repo Is
 
-This is a **Claude Code plugin** that packages skills for [cmux](https://github.com/manaflow-ai/cmux), a macOS multi-pane terminal/webview topology manager. The plugin is defined in `.claude-plugin/plugin.json` and exposes four skills to Claude Code sessions.
+This is a **Claude Code plugin** ([mangledmonkey/cmux-skills](https://github.com/mangledmonkey/cmux-skills)) that packages skills for [cmux](https://github.com/manaflow-ai/cmux), a macOS multi-pane terminal/webview topology manager. The plugin is defined in `.claude-plugin/plugin.json` and distributed via `.claude-plugin/marketplace.json`. It exposes four skills to Claude Code sessions.
 
 ## Architecture
 
 ```
-.claude-plugin/plugin.json   ← Plugin manifest (name, version, description)
+.claude-plugin/
+  plugin.json                ← Plugin manifest (name, version, description)
+  marketplace.json           ← Marketplace catalog for plugin discovery/installation
 skills/
   cmux/                      ← Topology control (windows, workspaces, panes, surfaces)
   browser/                   ← Browser automation on cmux webview surfaces

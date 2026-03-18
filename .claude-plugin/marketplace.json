@@ -1,0 +1,14 @@
+{
+  "name": "cmux-skills",
+  "owner": {
+    "name": "mangledmonkey"
+  },
+  "plugins": [
+    {
+      "name": "cmux",
+      "source": ".",
+      "description": "Skills for cmux topology control, browser automation, markdown viewer, and debug windows",
+      "version": "1.0.0"
+    }
+  ]
+}

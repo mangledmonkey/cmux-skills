@@ -2,5 +2,5 @@
   "name": "cmux",
   "version": "1.0.0",
   "description": "Skills for cmux topology control, browser automation, markdown viewer, and debug windows",
-  "repository": "https://github.com/manaflow-ai/cmux"
+  "repository": "https://github.com/mangledmonkey/cmux-skills"
 }
