@@ -1,5 +1,5 @@
 ---
-name: debug-windows
+name: cmux-debug-windows
 description: Manage cmux debug windows and related debug menu wiring for Sidebar Debug, Background Debug, and Menu Bar Extra Debug. Use this when the user asks to open/tune these debug controls, add or adjust Debug menu entries, or capture/copy a combined debug config snapshot.
 ---
 
@@ -21,7 +21,7 @@ Keep this workflow focused on existing debug windows and menu entries. Do not ad
 3. Reuse existing per-window copy buttons (`Copy Config`) in each debug window before adding new UI.
 4. For one combined payload, run:
 ```bash
-${CLAUDE_PLUGIN_ROOT}/skills/debug-windows/scripts/debug_windows_snapshot.sh --copy
+skills/cmux-debug-windows/scripts/debug_windows_snapshot.sh --copy
 ```
 5. After code edits, run build + tagged reload:
 ```bash
@@ -45,7 +45,7 @@ Purpose:
 
 Examples:
 ```bash
-${CLAUDE_PLUGIN_ROOT}/skills/debug-windows/scripts/debug_windows_snapshot.sh
-${CLAUDE_PLUGIN_ROOT}/skills/debug-windows/scripts/debug_windows_snapshot.sh --copy
-${CLAUDE_PLUGIN_ROOT}/skills/debug-windows/scripts/debug_windows_snapshot.sh --domain <bundle-id> --copy
+skills/cmux-debug-windows/scripts/debug_windows_snapshot.sh
+skills/cmux-debug-windows/scripts/debug_windows_snapshot.sh --copy
+skills/cmux-debug-windows/scripts/debug_windows_snapshot.sh --domain <bundle-id> --copy
 ```
