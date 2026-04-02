@@ -107,9 +107,9 @@ If `get url` is empty or `about:blank`, navigate first instead of waiting on loa
 
 | Template | Description |
 |----------|-------------|
-| [templates/form-automation.sh](templates/form-automation.sh) | Snapshot/ref form fill loop |
-| [templates/authenticated-session.sh](templates/authenticated-session.sh) | Login once, save/load state |
-| [templates/capture-workflow.sh](templates/capture-workflow.sh) | Navigate + capture snapshots/screenshots |
+| [templates/form-automation.sh](${CLAUDE_PLUGIN_ROOT}/skills/browser/templates/form-automation.sh) | Snapshot/ref form fill loop |
+| [templates/authenticated-session.sh](${CLAUDE_PLUGIN_ROOT}/skills/browser/templates/authenticated-session.sh) | Login once, save/load state |
+| [templates/capture-workflow.sh](${CLAUDE_PLUGIN_ROOT}/skills/browser/templates/capture-workflow.sh) | Navigate + capture snapshots/screenshots |
 
 ## Limits (WKWebView)
 
