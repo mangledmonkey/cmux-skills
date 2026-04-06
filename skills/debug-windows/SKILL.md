@@ -21,7 +21,7 @@ Keep this workflow focused on existing debug windows and menu entries. Do not ad
 3. Reuse existing per-window copy buttons (`Copy Config`) in each debug window before adding new UI.
 4. For one combined payload, run:
 ```bash
-${CLAUDE_PLUGIN_ROOT}/skills/debug-windows/scripts/debug_windows_snapshot.sh --copy
+skills/cmux-debug-windows/scripts/debug_windows_snapshot.sh --copy
 ```
 5. After code edits, run build + tagged reload:
 ```bash
