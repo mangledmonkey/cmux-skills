@@ -36,7 +36,7 @@ xcodebuild -project GhosttyTabs.xcodeproj -scheme cmux -configuration Debug -des
 
 ## Script
 
-- `scripts/debug_windows_snapshot.sh`
+- `${CLAUDE_PLUGIN_ROOT}/skills/debug-windows/scripts/debug_windows_snapshot.sh`
 
 Purpose:
 - Reads current debug-related defaults values.
